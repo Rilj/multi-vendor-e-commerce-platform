@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 100%;
+    --foreground: 220 10% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 10% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 10% 8%;
+    --primary: 210 20% 22%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 20% 96%;
+    --secondary-foreground: 210 10% 15%;
+    --muted: 210 10% 96%;
+    --muted-foreground: 210 10% 45%;
+    --accent: 30 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 210 60% 55%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 210 10% 6%;
+    --foreground: 210 10% 92%;
+    --card: 210 15% 10%;
+    --card-foreground: 210 10% 92%;
+    --popover: 210 15% 10%;
+    --popover-foreground: 210 10% 92%;
+    --primary: 210 20% 20%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 20% 15%;
+    --secondary-foreground: 30 20% 90%;
+    --muted: 210 10% 12%;
+    --muted-foreground: 210 10% 60%;
+    --accent: 30 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 80% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 10% 22%;
+    --input: 210 10% 22%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border bg-card text-card-foreground shadow-sm;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-input bg-background px-3 py-2 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .badge-success {
+    @apply bg-success-500 text-white;
+  }
+
+  .badge-warning {
+    @apply bg-warning-500 text-white;
+  }
+
+  .badge-error {
+    @apply bg-error-500 text-white;
+  }
+
+  .badge-neutral {
+    @apply bg-neutral-600 text-white;
+  }
+}

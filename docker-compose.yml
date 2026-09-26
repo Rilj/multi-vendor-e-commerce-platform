@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mv-ecommerce-postgres
+    environment:
+      POSTGRES_USER: mvuser
+      POSTGRES_PASSWORD: mvpass123
+      POSTGRES_DB: mvecommerce
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mvuser -d mvecommerce"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mv-ecommerce-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: mv-ecommerce-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - ./backend/.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/app
+      - ./prisma:/app/prisma
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: mv-ecommerce-frontend
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env.local
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  redis_data:
