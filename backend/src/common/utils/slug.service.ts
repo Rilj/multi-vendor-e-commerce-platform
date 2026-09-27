@@ -14,7 +14,7 @@ export class SlugService {
   }
 
   generateUnique(text: string, existingSlugs: string[]): string {
-    let baseSlug = this.generate(text);
+    const baseSlug = this.generate(text);
     let slug = baseSlug;
     let counter = 2;
 
