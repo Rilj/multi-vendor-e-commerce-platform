@@ -6,60 +6,64 @@ Enterprise-grade multi-vendor e-commerce platform built with **NestJS**, **Next.
 
 ```mermaid
 graph TD
-    subgraph "Client Layer"
-        A1[Web Browser] -->|HTTPS| LB
-        A2[Mobile App - Future] -->|HTTPS| LB
+
+    subgraph CLIENT["Client Layer"]
+        A1["Web Browser"] -->|HTTPS| LB
+        A2["Mobile App - Future"] -->|HTTPS| LB
     end
 
-    subgraph "Load Balancer / CDN"
-        LB[NGINX + Cloudflare CDN] --> F1[Frontend Next.js]
-        LB --> APIGW[API Gateway - Rate Limiting]
+    subgraph EDGE["Load Balancer / CDN"]
+        LB["NGINX + Cloudflare CDN"] --> F1
+        LB --> APIGW
     end
 
-    subgraph "Frontend"
-        F1[Next.js (App Router)] --> API[Backend API]
-        F1 -->|Static Assets| S3[AWS S3 / Cloudinary]
+    subgraph FRONTEND["Frontend"]
+        F1["Next.js App Router"] --> API
+        F1 -->|Static Assets| S3
     end
 
-    subgraph "Backend API"
-        API[NestJS Application] --> PS[Prisma ORM]
-        API --> RS[Redis Service]
-        API --> MS[Message Queue - BullMQ]
-        API --> ES[Email Service - Nodemailer]
-        API --> STS[Storage Service - S3/Cloudinary]
-        PS --> DB[(PostgreSQL)]
-        RS --> RD[(Redis)]
+    subgraph BACKEND["Backend API"]
+        API["NestJS Application"] --> PS
+        API --> RS
+        API --> MS
+        API --> ES
+        API --> STS
+
+        PS --> DB
+        RS --> RD
         MS --> RD
     end
 
-    subgraph "External Services"
-        DB[(PostgreSQL)]
-        RD[(Redis - Cache, Rate Limiter, Queue)]
-        MT[Midtrans Gateway]
-        ST[Stripe Gateway]
-        GOO[Google OAuth]
-        SES[AWS SES/SMTP]
-        S3[AWS S3 / Cloudinary]
-        GP[Google Places API]
+    subgraph EXTERNAL["External Services"]
+        DB["PostgreSQL"]
+        RD["Redis"]
+        MT["Midtrans Gateway"]
+        ST["Stripe Gateway"]
+        GOO["Google OAuth"]
+        SES["AWS SES / SMTP"]
+        S3["AWS S3 / Cloudinary"]
+        GP["Google Places API"]
     end
 
     APIGW -->|Webhook| MT
     APIGW -->|Webhook| ST
+
     API -->|OAuth| GOO
     API -->|Email| SES
     API -->|Uploads| S3
     API -->|Geocoding| GP
 
-    subgraph "Background Workers"
-        W1[Email Worker - BullMQ] --> RD
-        W2[Webhook Worker - BullMQ] --> RD
-        W3[PDF Worker - BullMQ] --> RD
-        W4[Queue Scheduler - BullMQ] --> RD
+    subgraph WORKERS["Background Workers"]
+        W1["Email Worker - BullMQ"] --> RD
+        W2["Webhook Worker - BullMQ"] --> RD
+        W3["PDF Worker - BullMQ"] --> RD
+        W4["Queue Scheduler - BullMQ"] --> RD
     end
 
     API -->|Enqueue| W1
     API -->|Enqueue| W2
     API -->|Enqueue| W3
+
     MT -->|Notify| API
     ST -->|Notify| API
 ```
