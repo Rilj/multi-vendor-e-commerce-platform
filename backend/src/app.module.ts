@@ -40,6 +40,7 @@ import { AllExceptionsFilter } from "./common/interceptors/exception.filter";
       envFilePath: [".env", ".env.local"],
     }),
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET || "default-secret",
       signOptions: { expiresIn: "7d" },
     }),
