@@ -17,7 +17,7 @@ async function getProduct(slug: string): Promise<Product | null> {
     });
     if (!res.ok) return null;
     const data = await res.json();
-    return data.data;
+    return data.data?.data ?? data.data;
   } catch {
     return null;
   }

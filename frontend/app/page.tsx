@@ -18,7 +18,7 @@ async function getFeaturedProducts() {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.data || [];
+    return data.data?.data || [];
   } catch {
     return [];
   }
@@ -31,7 +31,7 @@ async function getBanners() {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.data || [];
+    return data.data?.data || [];
   } catch {
     return [];
   }

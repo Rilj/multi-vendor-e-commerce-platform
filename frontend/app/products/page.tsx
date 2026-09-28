@@ -15,7 +15,8 @@ async function getProducts(filters: Record<string, string>) {
       next: { revalidate: 60 },
     });
     if (!res.ok) return { data: [], meta: { total: 0 } };
-    return await res.json();
+    const json = await res.json();
+    return { data: json.data?.data ?? json.data, meta: json.data?.meta || {} };
   } catch {
     return { data: [], meta: { total: 0 } };
   }

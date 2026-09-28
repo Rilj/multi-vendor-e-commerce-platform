@@ -18,7 +18,7 @@ export function useApi<T>(url: string, options?: RequestInit) {
     setState({ data: null, isLoading: true, error: null });
     try {
       const response = await api.get(url);
-      setState({ data: response.data.data, isLoading: false, error: null });
+      setState({ data: response.data.data?.data ?? response.data.data, isLoading: false, error: null });
     } catch (error: any) {
       setState({ data: null, isLoading: false, error: error });
     }

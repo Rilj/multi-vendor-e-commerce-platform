@@ -18,7 +18,7 @@ export default async function CheckoutPage() {
     });
     if (res.ok) {
       const data = await res.json();
-      cart = data.data;
+      cart = data.data.data || data.data;
     }
   } catch {
     cart = null;

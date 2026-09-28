@@ -38,7 +38,8 @@ async function CartContent() {
     return <div className="text-muted-foreground">Unable to load cart</div>;
   }
 
-  const cart: CartSummary = (await res.json()).data;
+  const json = await res.json();
+  const cart: CartSummary = json.data.data || json.data;
 
   if (!cart.vendors || cart.vendors.length === 0) {
     return (

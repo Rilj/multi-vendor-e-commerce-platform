@@ -22,7 +22,8 @@ export function useProducts() {
     setIsLoading(true);
     try {
       const response = await api.get(`/products?search=${encodeURIComponent(query)}`);
-      setProducts(response.data.data || []);
+      const payload = response.data.data;
+      setProducts(payload.data || payload || []);
     } catch (error) {
       console.error("Product search failed:", error);
       setProducts([]);
@@ -36,7 +37,8 @@ export function useProducts() {
     try {
       const params = new URLSearchParams(filters).toString();
       const response = await api.get(`/products?${params}`);
-      setProducts(response.data.data || []);
+      const payload = response.data.data;
+      setProducts(payload.data || payload || []);
     } catch (error) {
       console.error("Product fetch failed:", error);
       setProducts([]);
@@ -57,7 +59,8 @@ export function useProduct(slug: string) {
     setIsLoading(true);
     try {
       const response = await api.get(`/products/slug/${slug}`);
-      setProduct(response.data.data);
+      const payload = response.data.data;
+      setProduct(payload.data || payload);
     } catch (error) {
       console.error("Product fetch failed:", error);
     } finally {
