@@ -29,8 +29,10 @@ export default async function CartPage() {
 }
 
 async function CartContent() {
+  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
     credentials: "include",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
     next: { tags: ["cart"] },
   });
 

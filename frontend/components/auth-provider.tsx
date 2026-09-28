@@ -15,7 +15,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<User>;
-  logout: () => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,15 +35,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         });
         if (response.ok) {
           const data = await response.json();
-          setUser(data.data);
+          setUser(data.data || data);
+        } else {
+          localStorage.removeItem("accessToken");
         }
       } catch (error) {
         console.error("Auth check failed:", error);
+        localStorage.removeItem("accessToken");
       } finally {
         setIsLoading(false);
       }
@@ -65,15 +74,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const data = await response.json();
-    setUser(data.data.user);
-    return data.data.user;
+    const userData = data.data.user;
+    if (data.data.accessToken) {
+      localStorage.setItem("accessToken", data.data.accessToken);
+    }
+    setUser(userData);
+    return userData;
   };
 
-  const logout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+  const logout = () => {
+    localStorage.removeItem("accessToken");
     setUser(null);
   };
 

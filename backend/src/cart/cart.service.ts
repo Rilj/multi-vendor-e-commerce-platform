@@ -80,10 +80,11 @@ export class CartService {
           increment: quantity,
         },
       },
-      create: {
+       create: {
         userId,
         productVariantId: variantId,
         quantity,
+        user: { connect: { id: userId } },
       },
     });
 

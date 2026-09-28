@@ -23,9 +23,9 @@ export class CartController {
   async addToCart(
     @GetUser("id") userId: string,
     @Param("variantId") variantId: string,
-    @Query("quantity") quantity: number = 1,
-  ) {
-    const item = await this.cartService.addToCart(userId, variantId, Number(quantity));
+     @Query("quantity") quantity: number = 1,
+   ) {
+    const item = await this.cartService.addToCart(userId, variantId, Number(quantity) || 1);
     return { data: item };
   }
 

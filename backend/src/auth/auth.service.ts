@@ -104,7 +104,9 @@ export class AuthService {
       },
     });
 
-    await this.sendVerificationEmail(user.id, user.email, user.name);
+    this.sendVerificationEmail(user.id, user.email, user.name).catch((err) =>
+      this.logger.error(`Failed to send verification email: ${err.message}`),
+    );
     this.logger.log(`User registered: ${user.email}`);
 
     return {

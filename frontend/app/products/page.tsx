@@ -1,8 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { ProductGrid } from "@/components/product/product-grid";
-import { Suspense } from "react";
-import { Pagination } from "@/components/ui/pagination";
+import { ProductsView } from "@/components/product/products-view";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const dynamic = "force-dynamic";
@@ -55,20 +53,12 @@ export default async function ProductsPage({
           </Select>
         </div>
 
-        <Suspense fallback={<div>Loading products...</div>}>
-          <ProductGrid products={result.data || []} />
-          <Pagination
-            currentPage={Number(query.page) || 1}
-            totalPages={Math.ceil(result.meta?.total / 20) || 1}
-            total={result.meta?.total || 0}
-            pageSize={20}
-            onPageChange={(page) => {
-              const params = new URLSearchParams(window.location.search);
-              params.set("page", page.toString());
-              window.location.search = params.toString();
-            }}
-          />
-        </Suspense>
+        <ProductsView
+          products={result.data || []}
+          currentPage={Number(query.page) || 1}
+          totalPages={Math.ceil(result.meta?.total / 20) || 1}
+          total={result.meta?.total || 0}
+        />
       </main>
 
       <Footer />
