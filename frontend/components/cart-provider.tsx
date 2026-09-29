@@ -30,7 +30,7 @@ const refreshCart = async () => {
     });
     if (response.ok) {
       const data = await response.json();
-      setCart(data.data);
+      setCart(data.data?.data || data.data);
     }
   } catch (error) {
     console.error("Cart fetch failed:", error);
