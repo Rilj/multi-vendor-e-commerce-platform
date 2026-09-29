@@ -6,19 +6,19 @@ import { Pagination } from "@/components/ui/pagination";
 import { ProductGrid } from "@/components/product/product-grid";
 import { Product } from "@/types/api";
 
-interface ProductsViewProps {
+interface CategoryViewProps {
   products: Product[];
   currentPage: number;
   totalPages: number;
   total: number;
 }
 
-export function ProductsView({
+export function CategoryView({
   products,
   currentPage = 1,
   totalPages = 1,
   total = 0,
-}: ProductsViewProps) {
+}: CategoryViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 

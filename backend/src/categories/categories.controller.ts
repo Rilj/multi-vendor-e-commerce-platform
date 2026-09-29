@@ -34,12 +34,13 @@ export class CategoriesController {
     return { data: tree };
   }
 
-  @Get("slug/:slug")
-  @ApiOperation({ summary: "Get category by slug" })
-  async findBySlug(@Param("slug") slug: string) {
-    const category = await this.categoriesService.findBySlug(slug);
-    return { data: category };
-  }
+   @Get("slug/:slug*")
+   @ApiOperation({ summary: "Get category by slug" })
+   async findBySlug(@Param("slug") slugParts: string[]) {
+     const slug = slugParts.join("/");
+     const category = await this.categoriesService.findBySlug(slug);
+     return { data: category };
+   }
 
   @Get(":id")
   @ApiOperation({ summary: "Get category by ID" })
