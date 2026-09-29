@@ -1,3 +1,5 @@
+"use client";
+
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
@@ -6,21 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Trash2, Plus, Minus } from "lucide-react";
-import { CartSummary } from "@/types/api";
-import { Suspense } from "react";
+import { useCart } from "@/components/cart-provider";
 
-export const dynamic = "force-dynamic";
-
-export default async function CartPage() {
+export default function CartPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
       <main className="container mx-auto py-8">
         <h1 className="mb-6 text-2xl font-bold">Your Cart</h1>
-        <Suspense fallback={<div>Loading cart...</div>}>
-          <CartContent />
-        </Suspense>
+        <CartContent />
       </main>
 
       <Footer />
@@ -28,22 +25,14 @@ export default async function CartPage() {
   );
 }
 
-async function CartContent() {
-  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
-    credentials: "include",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    next: { tags: ["cart"] },
-  });
+function CartContent() {
+  const { cart, isLoading, updateQuantity, removeItem } = useCart();
 
-  if (!res.ok) {
-    return <div className="text-muted-foreground">Unable to load cart</div>;
+  if (isLoading) {
+    return <div>Loading cart...</div>;
   }
 
-  const json = await res.json();
-  const cart: CartSummary = json.data.data || json.data;
-
-  if (!cart.vendors || cart.vendors.length === 0) {
+  if (!cart || !cart.vendors || cart.vendors.length === 0) {
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground">Your cart is empty</p>
@@ -56,7 +45,7 @@ async function CartContent() {
 
   return (
     <div className="space-y-8">
-      {cart.vendors.map((vendor) => (
+      {cart.vendors.map((vendor: any) => (
         <Card key={vendor.vendorId}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -65,8 +54,14 @@ async function CartContent() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {vendor.items.map((item) => (
-                <CartItemRow key={item.variantId} item={item} vendorId={vendor.vendorId} />
+              {vendor.items.map((item: any) => (
+                <CartItemRow
+                  key={item.variantId}
+                  item={item}
+                  vendorId={vendor.vendorId}
+                  updateQuantity={updateQuantity}
+                  removeItem={removeItem}
+                />
               ))}
             </div>
             <div className="mt-4 flex justify-end border-t pt-4">
@@ -101,7 +96,28 @@ async function CartContent() {
   );
 }
 
-function CartItemRow({ item, vendorId }: { item: any; vendorId: string }) {
+function CartItemRow({
+  item,
+  vendorId,
+  updateQuantity,
+  removeItem,
+}: {
+  item: any;
+  vendorId: string;
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
+  removeItem: (itemId: string) => Promise<void>;
+}) {
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const qty = parseInt(e.target.value, 10);
+    if (!isNaN(qty) && qty > 0) {
+      updateQuantity(item.id || item.variantId, qty);
+    }
+  };
+
+  const handleRemove = () => {
+    removeItem(item.id || item.variantId);
+  };
+
   return (
     <div className="flex items-center gap-4">
       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
@@ -123,18 +139,30 @@ function CartItemRow({ item, vendorId }: { item: any; vendorId: string }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="rounded-lg border border-input p-1 hover:bg-muted">
+        <button
+          className="rounded-lg border border-input p-1 hover:bg-muted"
+          onClick={() => updateQuantity(item.id || item.variantId, Math.max(1, item.quantity - 1))}
+        >
           <Minus className="h-4 w-4" />
         </button>
-        <Input type="number" value={item.quantity} className="w-12 text-center" />
-        <button className="rounded-lg border border-input p-1 hover:bg-muted">
+        <Input
+          type="number"
+          value={item.quantity}
+          min={1}
+          onChange={handleQuantityChange}
+          className="w-12 text-center"
+        />
+        <button
+          className="rounded-lg border border-input p-1 hover:bg-muted"
+          onClick={() => updateQuantity(item.id || item.variantId, item.quantity + 1)}
+        >
           <Plus className="h-4 w-4" />
         </button>
       </div>
 
       <div className="w-20 text-right">
         <span className="font-medium">${item.totalPrice.toFixed(2)}</span>
-        <button className="mt-2 text-red-500 hover:text-red-600">
+        <button className="mt-2 text-red-500 hover:text-red-600" onClick={handleRemove}>
           <Trash2 className="h-4 w-4" />
         </button>
       </div>
