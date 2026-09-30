@@ -12,35 +12,36 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
 const getAuthHeaders = () => {
   const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-const refreshCart = async () => {
-  setIsLoading(true);
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
-      credentials: "include",
-      headers: getAuthHeaders(),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setCart(data.data?.data || data.data);
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [cart, setCart] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const refreshCart = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
+        credentials: "include",
+        headers: getAuthHeaders(),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCart(data.data?.data || data.data);
+      }
+    } catch (error) {
+      console.error("Cart fetch failed:", error);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error("Cart fetch failed:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   useEffect(() => {
     refreshCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addItem = async (variantId: string, quantity: number = 1) => {
