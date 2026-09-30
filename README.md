@@ -1,6 +1,6 @@
 # Multi-Vendor E-Commerce Platform
 
-Enterprise-grade multi-vendor e-commerce platform built with **NestJS**, **Next.js**, **PostgreSQL**, and **Redis**.
+Enterprise-grade multi-vendor e-commerce platform built with **NestJS**, **Next.js**, **PostgreSQL**, and **Redis**..
 
 ## Architecture
 
