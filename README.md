@@ -166,7 +166,7 @@ multi-vendor-ecommerce/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Rilj/multi-vendor-e-commerce-platform.git
 cd multi-vendor-ecommerce-platform
 
 # Start databases with Docker
