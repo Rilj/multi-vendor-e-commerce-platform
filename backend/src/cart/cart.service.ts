@@ -4,6 +4,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { RedisService } from "../redis/redis.service";
 
 export interface CartItemWithDetails {
+  id: string;
   productId: string;
   productName: string;
   vendorId: string;
@@ -204,6 +205,7 @@ export class CartService {
       const itemTotal = price * quantity;
 
       group.items.push({
+        id: item.id,
         productId: item.variant.product.id,
         productName: item.variant.product.name,
         vendorId,
