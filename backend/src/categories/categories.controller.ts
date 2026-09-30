@@ -36,8 +36,8 @@ export class CategoriesController {
 
    @Get("slug/:slug*")
    @ApiOperation({ summary: "Get category by slug" })
-   async findBySlug(@Param("slug") slugParts: string[]) {
-     const slug = slugParts.join("/");
+    async findBySlug(@Param("slug") slugParts: string | string[]) {
+      const slug = Array.isArray(slugParts) ? slugParts.join("/") : slugParts;
      const category = await this.categoriesService.findBySlug(slug);
      return { data: category };
    }
