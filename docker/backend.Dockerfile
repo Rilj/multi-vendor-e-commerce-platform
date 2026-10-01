@@ -3,10 +3,12 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY backend/package*.json ./
 RUN npm ci
 
-COPY . .
+COPY backend/ ./
+COPY prisma/ ./prisma/
+RUN npx prisma generate
 RUN npm run build
 
 # Production stage
@@ -18,7 +20,7 @@ ENV NODE_ENV=production
 ENV PORT=4000
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
+COPY backend/package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
 EXPOSE 4000

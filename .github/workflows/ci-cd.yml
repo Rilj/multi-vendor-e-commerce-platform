@@ -31,9 +31,7 @@ jobs:
           cache: npm
           cache-dependency-path: ${{ matrix.workspace }}/package-lock.json
       - name: Install dependencies
-        run: |
-          cd ${{ matrix.workspace }}
-          npm ci
+        run: npm ci
       - name: Lint
         run: npm run lint
       - name: Type-check
@@ -85,7 +83,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/mv_ecommerce_test
           REDIS_URL: redis://localhost:6379
-        run: npm test:ci
+        run: npm run test:ci
       - name: Run E2E tests
         working-directory: backend
         env:
@@ -110,7 +108,7 @@ jobs:
         run: npm ci
       - name: Run unit tests
         working-directory: frontend
-        run: npm test
+        run: npm run test:ci
 
   frontend-build:
     name: Frontend Build
@@ -163,8 +161,8 @@ jobs:
       - name: Build & push backend
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
-          file: backend/Dockerfile
+          context: .
+          file: docker/backend.Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -172,7 +170,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: frontend/Dockerfile
+          file: docker/frontend.Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
