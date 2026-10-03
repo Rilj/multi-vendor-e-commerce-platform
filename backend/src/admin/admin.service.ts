@@ -126,6 +126,26 @@ export class AdminService {
     });
   }
 
+  async getVendors(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+    const [vendors, total] = await Promise.all([
+      this.prisma.vendor.findMany({
+        skip,
+        take: limit,
+        include: {
+          user: { select: { id: true, name: true, email: true, createdAt: true } },
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      this.prisma.vendor.count(),
+    ]);
+
+    return {
+      data: vendors,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
+  }
+
   async getPayouts(page: number = 1, limit: number = 20, status?: PayoutStatus) {
     const skip = (page - 1) * limit;
     const where: any = {};

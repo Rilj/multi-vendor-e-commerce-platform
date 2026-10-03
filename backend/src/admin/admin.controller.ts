@@ -51,6 +51,12 @@ export class AdminController {
     return { data: vendor };
   }
 
+  @Get("vendors")
+  @ApiOperation({ summary: "List all vendors" })
+  async getVendors(@Query("page") page: number = 1, @Query("limit") limit: number = 20) {
+    return this.adminService.getVendors(Number(page), Number(limit));
+  }
+
   @Get("payouts")
   @ApiOperation({ summary: "List payout requests" })
   async getPayouts(
