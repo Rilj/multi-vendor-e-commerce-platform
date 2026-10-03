@@ -2,6 +2,7 @@ const { NextConfig } = require("next");
 
 /** @type {NextConfig} */
 const nextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   swcMinify: true,
   images: {
