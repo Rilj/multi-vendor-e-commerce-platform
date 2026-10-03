@@ -101,14 +101,14 @@ function CategoryGrid() {
   const categories = [
     { name: "Electronics", slug: "electronics", color: "bg-neutral-100" },
     { name: "Fashion", slug: "fashion", color: "bg-neutral-100" },
-    { name: "Home & Living", slug: "home-living", color: "bg-neutral-100" },
-    { name: "Sports & Outdoors", slug: "sports-outdoors", color: "bg-neutral-100" },
+    { name: "Home & Living", slug: "home-&-living", color: "bg-neutral-100" },
+    { name: "Sports & Outdoors", slug: "sports-&-outdoors", color: "bg-neutral-100" },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       {categories.map((cat) => (
-        <Link key={cat.slug} href={`/categories/${cat.slug}`}>
+        <Link key={cat.slug} href={`/categories/${encodeURIComponent(cat.slug)}`}>
           <Card className="cursor-pointer transition-transform hover:scale-[1.02]">
             <CardContent className="flex flex-col items-center py-6">
               <div className={`mb-3 flex h-16 w-16 items-center justify-center rounded-full ${cat.color}`}>
@@ -131,10 +131,10 @@ function CategoryIcon({ slug }: { slug: string }) {
     fashion: (
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line><line x1="15" y1="15" x2="15.01" y2="15"></line><circle cx="10" cy="10" r="3"></circle></svg>
     ),
-    "home-living": (
+    "home-&-living": (
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
     ),
-    "sports-outdoors": (
+    "sports-&-outdoors": (
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
     ),
   };
