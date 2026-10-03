@@ -30,7 +30,7 @@ export function Footer() {
             <h4 className="mb-3 text-sm font-semibold">For Vendors</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="/vendor/register" className="text-muted-foreground hover:text-foreground">Sell on MV-Commerce</a></li>
-              <li><a href="/vendor/login" className="text-muted-foreground hover:text-foreground">Vendor Login</a></li>
+              <li><a href="/login" className="text-muted-foreground hover:text-foreground">Vendor Login</a></li>
             </ul>
           </div>
         </div>
