@@ -152,7 +152,7 @@ export default function AdminVendorsPage() {
                             variant={
                               vendor.status === "APPROVED" ? "success" :
                               vendor.status === "PENDING" ? "warning" :
-                              vendor.status === "SUSPENDED" ? "destructive" : "secondary"
+                              vendor.status === "SUSPENDED" ? "error" : "secondary"
                             }
                           >
                             {vendor.status}
